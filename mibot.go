@@ -6,7 +6,6 @@ import (
 	"log"
 	"net"
 	"net/textproto"
-	"regexp"
 	"strings"
 	"github.com/nyubis/mibot/ircmessage"
 	"github.com/nyubis/mibot/modules"
@@ -62,20 +61,6 @@ func (bot *Bot) handleirc(line string) bool {
 		bot.SendCommand("PONG" + line[4:])
 		return true
 	}
-	// MOTD -> auth and join default channel
-	type_re := regexp.MustCompile(` \d+ `)
-	if type_re.FindString(line) == " 376 " {
-		bot.SendCommand("JOIN " + bot.channel)
-		return true
-	}
-	// Join channels on invite
-	inv_re := regexp.MustCompile(` INVITE `)
-	if inv_re.FindString(line) != "" {
-		chan_re := regexp.MustCompile(":#.+$")
-		channel := chan_re.FindString(line)[1:]
-		bot.SendCommand("JOIN " + channel)
-		return true
-	}
 	
 	return false
 }
@@ -119,7 +104,7 @@ func (bot *Bot) inputHandler() {
 
 
 func main() {
-	ircbot := NewBot("linkreader", "#/g/sicp", "irc.rizon.net", 6667)
+	ircbot := NewBot("linkreader", "#bots", "irc.rizon.net", 6667)
 	defer ircbot.disconnect()
 	ircbot.Connect()
 	modules.Load()
