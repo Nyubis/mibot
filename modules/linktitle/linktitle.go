@@ -45,7 +45,7 @@ func Handle(msg ircmessage.Message) {
 		return
 	}
 
-	bot.SendMessage(msg.Channel, findTitle(url))
+	bot.SendMessage(msg.Channel, "[URL] " + findTitle(url))
 }
 
 func findTitle(url string) string {
