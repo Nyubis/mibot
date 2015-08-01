@@ -9,7 +9,6 @@ import (
 	"net/textproto"
 
 	"github.com/nyubis/mibot/ircmessage"
-	"github.com/nyubis/mibot/modules"
 )
 
 type Bot struct {
@@ -37,6 +36,14 @@ func (bot *Bot) SendCommand(cmd string) {
 	output := sanitise(cmd) + "\r\n"
 	fmt.Printf(">> %s", output)
 	bot.coutput <- output
+}
+
+func (bot *Bot) SendMessage(to string, content string) {
+	bot.SendCommand(fmt.Sprintf("PRIVMSG %s :%s", to, content))
+}
+
+func (bot *Bot) SendJoin(channel string) {
+	bot.SendCommand("JOIN " + channel)
 }
 
 func (bot *Bot) Connect() {
@@ -84,13 +91,6 @@ func (bot *Bot) handleirc(line string) bool {
 	return false
 }
 
-func (bot *Bot) handle(line string) {
-	replies := modules.Handle(ircmessage.Parse(line))
-	for _, reply := range replies {
-		bot.SendCommand(reply)
-	}
-}
-
 func sanitise(cmd string) string {
 	maxlength := 510
 	cmd = strings.Replace(cmd, "\r", "", -1)
@@ -117,6 +117,6 @@ func (bot *Bot) inputHandler() {
 			continue
 		}
 		// Otherwise, handle the channel data in a new goroutine
-		go bot.handle(line)
+		go PassToModules(ircmessage.Parse(line))
 	}
 }

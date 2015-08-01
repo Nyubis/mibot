@@ -2,20 +2,25 @@ package channels
 
 import (
 	"github.com/nyubis/mibot/ircmessage"
+	"github.com/nyubis/mibot/core"
 )
 
 var autojoin = "#bots"
 var blacklist = []string{"#services", "#ripyourbot"}
+var bot *core.Bot
 
-func Autojoin(msg ircmessage.Message) string {
-	return ircmessage.Join(autojoin)
+func Init(ircbot *core.Bot) {
+	bot = ircbot
 }
 
-func InviteJoin(msg ircmessage.Message) string {
+func Autojoin(msg ircmessage.Message) {
+	bot.SendJoin(autojoin)
+}
+
+func InviteJoin(msg ircmessage.Message) {
 	if len(msg.Content) > 0 && msg.Content[0] == '#' && !contains(blacklist, msg.Content) {
-		return ircmessage.Join(msg.Content)
+		bot.SendJoin(msg.Content)
 	}
-	return ""
 }
 
 func contains(hay []string, needle string) bool {

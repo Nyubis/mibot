@@ -9,6 +9,6 @@ import (
 func main() {
 	ircbot := core.NewBot("binkreader", "#bots", "irc.rizon.net", 6667)
 	defer ircbot.Disconnect()
-	modules.Load()
+	modules.Load(ircbot)
 	ircbot.Connect()
 }

@@ -2,11 +2,17 @@ package replies
 
 import (
 	"github.com/nyubis/mibot/ircmessage"
+	"github.com/nyubis/mibot/core"
 )
 
-func Handle(msg ircmessage.Message) string {
+var bot *core.Bot
+
+func Init(ircbot *core.Bot) {
+	bot = ircbot
+}
+
+func Handle(msg ircmessage.Message) {
 	if msg.Content == ".bots" {
-		return ircmessage.PrivMsg(msg.Channel, "Reporting in! [Go] Code is proprietary :^)")
+		bot.SendMessage(msg.Channel, "Reporting in! [Go] On Github soon, I promise!")
 	}
-	return ""
 }

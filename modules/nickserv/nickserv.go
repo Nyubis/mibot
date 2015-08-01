@@ -3,9 +3,16 @@ package nickserv
 import (
 	"io/ioutil"
 	"github.com/nyubis/mibot/ircmessage"
+	"github.com/nyubis/mibot/core"
 )
 
-func Handle(_ ircmessage.Message) string {
+var bot *core.Bot
+
+func Init(ircbot *core.Bot) {
+	bot = ircbot
+}
+
+func Handle(_ ircmessage.Message) {
 	buf, _ := ioutil.ReadFile("./modules/nickserv/password.txt")
-	return ircmessage.PrivMsg("NickServ", "IDENTIFY " + string(buf)) 
+	bot.SendMessage("NickServ", "IDENTIFY " + string(buf)) 
 }

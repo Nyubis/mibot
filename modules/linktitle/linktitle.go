@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/nyubis/mibot/ircmessage"
+	"github.com/nyubis/mibot/core"
 )
 
 const (
@@ -23,6 +24,7 @@ const (
 var httpRe = regexp.MustCompile("https?://[^\\s]*")
 var titleRe = regexp.MustCompile("<title>\\s*(?P<want>.*)\\s*</title>")
 
+var bot *core.Bot
 var client = &http.Client{
 	CheckRedirect: func(_ *http.Request, via []*http.Request) error {
 		if len(via) >= redirectLimit {
@@ -33,13 +35,17 @@ var client = &http.Client{
 	Timeout: time.Duration(timeout)*time.Millisecond,
 }
 
-func Handle(msg ircmessage.Message) string {
+func Init(ircbot *core.Bot) {
+	bot = ircbot
+}
+
+func Handle(msg ircmessage.Message) {
 	url := httpRe.FindString(msg.Content)
 	if url == "" {
-		return ""
+		return
 	}
 
-	return ircmessage.PrivMsg(msg.Channel, findTitle(url))
+	bot.SendMessage(msg.Channel, findTitle(url))
 }
 
 func findTitle(url string) string {
