@@ -21,7 +21,6 @@ func Handle(msg ircmessage.Message) []string {
 	replies := make([]string, 0)
 	for _, mod := range modules {
 		if mod.triggerType == msg.Command {
-			fmt.Printf("Triggered module for %s\n", msg.Command)
 			reply := mod.handler(msg)
 			if reply != "" {
 				replies = append(replies, reply)
