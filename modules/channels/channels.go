@@ -5,7 +5,7 @@ import (
 	"github.com/nyubis/mibot/core"
 )
 
-var autojoin = "#bots"
+var autojoin = []string{"#bots", "#/g/sicp"}
 var blacklist = []string{"#services", "#ripyourbot"}
 var bot *core.Bot
 
@@ -14,7 +14,9 @@ func Init(ircbot *core.Bot) {
 }
 
 func Autojoin(msg ircmessage.Message) {
-	bot.SendJoin(autojoin)
+	for _, channel := range autojoin {
+		bot.SendJoin(channel)
+	}
 }
 
 func InviteJoin(msg ircmessage.Message) {
