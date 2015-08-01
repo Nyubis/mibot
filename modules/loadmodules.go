@@ -13,9 +13,9 @@ func Load(bot *core.Bot) {
 	replies.Init(bot)
 	core.AddModule("PRIVMSG", linktitle.Handle)
 	linktitle.Init(bot)
-	core.AddModule("005", nickserv.Handle)
+	core.AddModule("001", nickserv.Handle)
 	nickserv.Init(bot)
-	core.AddModule("005", channels.Autojoin)
+	core.AddModule("001", channels.Autojoin)
 	core.AddModule("INVITE", channels.InviteJoin)
 	channels.Init(bot)
 }
