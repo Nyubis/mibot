@@ -5,12 +5,15 @@ import (
 	"github.com/nyubis/mibot/core"
 )
 
-var autojoin = []string{"#bots", "#/g/sicp"}
-var blacklist = []string{"#services", "#ripyourbot"}
+var autojoin []string
+var blacklist []string
 var bot *core.Bot
 
 func Init(ircbot *core.Bot) {
 	bot = ircbot
+
+	autojoin = prefix(core.Config.Channels.Autojoin)
+	blacklist = prefix(core.Config.Channels.Blacklist)
 }
 
 func Autojoin(msg ircmessage.Message) {
@@ -32,4 +35,11 @@ func contains(hay []string, needle string) bool {
 		}
 	}
 	return false
+}
+
+func prefix(channels []string) []string {
+	for i, c := range channels {
+		channels[i] = "#" + c
+	}
+	return channels
 }
