@@ -12,7 +12,6 @@ const (
 type ConfStruct struct {
 	Main struct {
 		Nick string
-		Channel string
 		Server string
 		Port int
 	}

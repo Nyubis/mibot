@@ -9,7 +9,6 @@ func main() {
 	core.LoadConfig()
 	ircbot := core.NewBot(
 		core.Config.Main.Nick,
-		core.Config.Main.Channel,
 		core.Config.Main.Server,
 		core.Config.Main.Port)
 	defer ircbot.Disconnect()

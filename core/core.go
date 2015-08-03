@@ -14,7 +14,6 @@ import (
 type Bot struct {
 	nick          string
 	user          string
-	channel       string
 	server        string
 	port          int
 	conn          net.Conn
@@ -22,11 +21,10 @@ type Bot struct {
 	coutput       chan string
 }
 
-func NewBot(nick string, channel string, server string, port int) *Bot {
+func NewBot(nick string, server string, port int) *Bot {
 	return &Bot{
 		nick:          nick,
 		user:          nick,
-		channel:       channel,
 		server:        server,
 		port:          port,
 	}
