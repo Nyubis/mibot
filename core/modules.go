@@ -2,8 +2,12 @@ package core
 
 import (
 	"fmt"
+	"strings"
 	"github.com/nyubis/mibot/ircmessage"
+)
 
+const (
+	commandChar = '@'
 )
 
 type module struct {
@@ -12,17 +16,36 @@ type module struct {
 }
 
 var modules []module = make([]module, 0)
+var commands map[string]func([]string, string, string) = make(map[string]func([]string, string, string), 0)
 
 func AddModule(triggerType string, handler func(ircmessage.Message)) {
 	modules = append(modules, module{triggerType, handler})
-	fmt.Printf("Added module for %s\n", triggerType)
+	fmt.Println("Added module for", triggerType)
+}
+
+func AddCommand(cmd string, handler func([]string, string, string)) {
+	commands[cmd] = handler
+	fmt.Println("Added command", cmd)
 }
 
 func PassToModules(msg ircmessage.Message) {
+	if msg.Command == "PRIVMSG" && msg.Content[0] == commandChar {
+		doCommand(msg)
+	}
 	for _, mod := range modules {
 		if mod.triggerType == msg.Command {
 			mod.handler(msg)
 		}
+	}
+}
+
+func doCommand(msg ircmessage.Message) {
+	split := strings.Split(msg.Content, " ")
+	cmdstring := split[0][1:]
+	handler, exists := commands[cmdstring]
+
+	if exists {
+		handler(split[1:], msg.Sender, msg.Channel)
 	}
 }
 
