@@ -45,7 +45,7 @@ func doCommand(msg ircmessage.Message) {
 	handler, exists := commands[cmdstring]
 
 	if exists {
-		handler(split[1:], msg.Sender, msg.Channel)
+		handler(split[1:], msg.Nick, msg.Channel)
 	}
 }
 
