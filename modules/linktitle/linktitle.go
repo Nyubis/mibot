@@ -60,7 +60,11 @@ func findTitle(url string) string {
 	
 	contentType := resp.Header.Get("Content-Type")
 	if !strings.Contains(contentType, "text/html") {
-		return fmt.Sprintf("%s, %s", contentType, parseSize(resp.ContentLength))
+		if resp.ContentLength >= 0 {
+			return fmt.Sprintf("%s, %s", contentType, parseSize(resp.ContentLength))
+		} else {
+			return fmt.Sprintf("%s, unknown size", contentType)
+		}
 	}
 
 	matches := titleRe.FindStringSubmatch(string(buf[:n]))
