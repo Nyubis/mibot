@@ -19,10 +19,14 @@ const (
 	titleLimit    = 200
 	timeout       = 2500
 	byteLimit     = 65536
+
+	shortenURL    = "http://is.gd/create.php?format=simple&url="
 )
 
 var httpRe = regexp.MustCompile("https?://[^\\s]*")
 var titleRe = regexp.MustCompile("<title>\\s*(?P<want>.*)\\s*</title>")
+
+var lastURL string
 
 var bot *core.Bot
 var client = &http.Client{
@@ -45,7 +49,22 @@ func Handle(msg ircmessage.Message) {
 		return
 	}
 
+	lastURL = url
 	bot.SendMessage(msg.Channel, "[URL] " + findTitle(url))
+}
+
+func HandleShorten(_ []string, sender string, channel string) {
+	if lastURL == "" {
+		fmt.Println("No last url to shorten")
+		return
+	}
+	short, err := shorten(lastURL)
+	if err != nil {
+		fmt.Println("Failed to shorten url", lastURL)
+		fmt.Println(err)
+		return
+	}
+	bot.SendMessage(channel, sender + ": " + short)
 }
 
 func findTitle(url string) string {
@@ -93,4 +112,17 @@ func truncate(s string) string {
 		return s
 	}
 	return s[:titleLimit] + "..."
+}
+
+func shorten(url string) (string, error) {
+	resp, err := client.Get(shortenURL + url)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	buf := make([]byte, byteLimit)
+	n, _ := io.ReadFull(resp.Body, buf)
+
+	return string(buf[:n]), nil
 }

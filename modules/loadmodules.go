@@ -12,6 +12,7 @@ func Load(bot *core.Bot) {
 	core.AddModule("PRIVMSG", replies.Handle)
 	replies.Init(bot)
 	core.AddModule("PRIVMSG", linktitle.Handle)
+	core.AddCommand("shorten", linktitle.HandleShorten)
 	linktitle.Init(bot)
 	core.AddModule("001", nickserv.Handle)
 	nickserv.Init(bot)
