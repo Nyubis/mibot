@@ -13,6 +13,7 @@ import (
 	"github.com/nyubis/mibot/ircmessage"
 	"github.com/nyubis/mibot/core"
 	"github.com/nyubis/mibot/modules/admin"
+	"github.com/nyubis/mibot/utils"
 )
 
 const (
@@ -99,7 +100,7 @@ func findTitle(url string) string {
 	contentType := resp.Header.Get("Content-Type")
 	if !strings.Contains(contentType, "text/html") {
 		if resp.ContentLength >= 0 {
-			return fmt.Sprintf("%s, %s", contentType, parseSize(resp.ContentLength))
+			return fmt.Sprintf("%s, %s", contentType, utils.ParseSize(resp.ContentLength))
 		} else {
 			return fmt.Sprintf("%s, unknown size", contentType)
 		}
@@ -111,26 +112,7 @@ func findTitle(url string) string {
 	}
 
 	title := html.UnescapeString(matches[1])
-	return truncate(title)
-}
-
-func parseSize(bytes int64) string {
-	units := [...]string{ "B", "KiB", "MiB", "GiB", "TiB", "PiB" }
-	size := float64(bytes)
-	var i int
-
-	for i = 0; size > 1024 && i < len(units)-1; i++ {
-		size /= 1024
-	}
-
-	return fmt.Sprintf("%.2f %s", size, units[i])
-}
-
-func truncate(s string) string {
-	if len(s) <= titleLimit {
-		return s
-	}
-	return s[:titleLimit] + "..."
+	return utils.Truncate(title, titleLimit)
 }
 
 func shorten(url string) (string, error) {

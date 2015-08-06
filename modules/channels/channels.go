@@ -3,6 +3,7 @@ package channels
 import (
 	"github.com/nyubis/mibot/ircmessage"
 	"github.com/nyubis/mibot/core"
+	"github.com/nyubis/mibot/utils"
 )
 
 var autojoin []string
@@ -23,18 +24,9 @@ func Autojoin(msg ircmessage.Message) {
 }
 
 func InviteJoin(msg ircmessage.Message) {
-	if len(msg.Content) > 0 && msg.Content[0] == '#' && !contains(blacklist, msg.Content) {
+	if len(msg.Content) > 0 && msg.Content[0] == '#' && !utils.Contains(blacklist, msg.Content) {
 		bot.SendJoin(msg.Content)
 	}
-}
-
-func contains(hay []string, needle string) bool {
-	for _, s := range hay {
-		if s == needle {
-			return true
-		}
-	}
-	return false
 }
 
 func prefix(channels []string) []string {

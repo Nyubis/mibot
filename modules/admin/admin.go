@@ -2,20 +2,12 @@ package admin
 
 import (
 	"github.com/nyubis/mibot/core"
+	"github.com/nyubis/mibot/utils"
 )
 
 func CheckAdmin(nick string) bool {
-	if contains(core.Config.Admins.Admins, nick) {
+	if utils.Contains(core.Config.Admins.Admins, nick) {
 		return IsAuthenticated(nick)
-	}
-	return false
-}
-
-func contains(list []string, item string) bool {
-	for _, s := range list {
-		if s == item {
-			return true
-		}
 	}
 	return false
 }
