@@ -25,6 +25,9 @@ type ConfStruct struct {
 	Replies struct {
 		Replies []string
 	}
+	Admins struct {
+		Admins []string
+	}
 }
 
 var Config ConfStruct

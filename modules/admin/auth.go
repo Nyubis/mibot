@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/nyubis/mibot/core"
@@ -18,9 +17,7 @@ func Init(ircbot *core.Bot) {
 
 func IsAuthenticated(nick string) bool {
 	bot.SendCommand("WHO " + nick)
-	fmt.Println("WHO sent, waiting for channel...")
 	msg := <-whochan
-	fmt.Println("WHO received from channel")
 
 	l := len(msg.Params) - 1
 	flags := msg.Params[l] // Last element
@@ -30,6 +27,5 @@ func IsAuthenticated(nick string) bool {
 }
 	
 func ReceiveWho(msg ircmessage.Message) {
-	fmt.Println("Who receiving, queueing up")
 	whochan <- msg
 }
