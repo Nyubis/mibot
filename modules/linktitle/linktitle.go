@@ -12,6 +12,7 @@ import (
 
 	"github.com/nyubis/mibot/ircmessage"
 	"github.com/nyubis/mibot/core"
+	"github.com/nyubis/mibot/modules/admin"
 )
 
 const (
@@ -27,6 +28,7 @@ var httpRe = regexp.MustCompile("https?://[^\\s]*")
 var titleRe = regexp.MustCompile("<title>\\s*(?P<want>.*)\\s*</title>")
 
 var lastURL string
+var enabled bool = true
 
 var bot *core.Bot
 var client = &http.Client{
@@ -50,7 +52,12 @@ func Handle(msg ircmessage.Message) {
 	}
 
 	lastURL = url
-	bot.SendMessage(msg.Channel, "[URL] " + findTitle(url))
+	if enabled {
+		title := findTitle(url)
+		if title != "" {
+			bot.SendMessage(msg.Channel, "[URL] " + title)
+		}
+	}
 }
 
 func HandleShorten(_ []string, sender string, channel string) {
@@ -65,6 +72,29 @@ func HandleShorten(_ []string, sender string, channel string) {
 		return
 	}
 	bot.SendMessage(channel, sender + ": " + short)
+}
+
+func ReceiveAuth(msg ircmessage.Message) {
+	l := len(msg.Params) - 1
+	flags := msg.Params[l] // Last element
+	nick := msg.Params[l-1] // Second to last
+
+	fmt.Println(flags, nick)
+	if strings.Contains(flags, "r") {
+		todo(nick)
+	}
+}
+
+func HandleDisable(_ []string, sender string, _ string) {
+	if admin.CheckAdmin(sender) {
+		enabled = false
+	}
+}
+
+func HandleEnable(_ []string, sender string, _ string) {
+	if admin.CheckAdmin(sender) {
+		enabled = false
+	}
 }
 
 func findTitle(url string) string {

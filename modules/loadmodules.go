@@ -6,17 +6,24 @@ import (
 	"github.com/nyubis/mibot/modules/replies"
 	"github.com/nyubis/mibot/modules/nickserv"
 	"github.com/nyubis/mibot/modules/channels"
+	"github.com/nyubis/mibot/modules/admin"
 )
 
 func Load(bot *core.Bot) {
 	core.AddModule("PRIVMSG", replies.Handle)
-	replies.Init(bot)
 	core.AddModule("PRIVMSG", linktitle.Handle)
-	core.AddCommand("shorten", linktitle.HandleShorten)
-	linktitle.Init(bot)
+	core.AddModule("352", admin.ReceiveWho)
 	core.AddModule("001", nickserv.Handle)
-	nickserv.Init(bot)
 	core.AddModule("001", channels.Autojoin)
 	core.AddModule("INVITE", channels.InviteJoin)
+
+	core.AddCommand("shorten", linktitle.HandleShorten)
+	core.AddCommand("enable", linktitle.HandleEnable)
+	core.AddCommand("disable", linktitle.HandleDisable)
+
+	replies.Init(bot)
+	linktitle.Init(bot)
+	admin.Init(bot)
+	nickserv.Init(bot)
 	channels.Init(bot)
 }
