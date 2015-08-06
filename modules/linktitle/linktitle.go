@@ -29,7 +29,7 @@ var httpRe = regexp.MustCompile("https?://[^\\s]*")
 var titleRe = regexp.MustCompile("<title>\\s*(?P<want>.*)\\s*</title>")
 
 var lastURL string
-var enabled bool = true
+var disabled map[string]bool
 
 var bot *core.Bot
 var client = &http.Client{
@@ -44,6 +44,7 @@ var client = &http.Client{
 
 func Init(ircbot *core.Bot) {
 	bot = ircbot
+	disabled = make(map[string]bool)
 }
 
 func Handle(msg ircmessage.Message) {
@@ -53,7 +54,7 @@ func Handle(msg ircmessage.Message) {
 	}
 
 	lastURL = url
-	if enabled {
+	if !disabled[msg.Channel] {
 		title := findTitle(url)
 		if title != "" {
 			bot.SendMessage(msg.Channel, "[URL] " + title)
@@ -75,15 +76,15 @@ func HandleShorten(_ []string, sender string, channel string) {
 	bot.SendMessage(channel, sender + ": " + short)
 }
 
-func HandleDisable(_ []string, sender string, _ string) {
+func HandleDisable(_ []string, sender string, channel string) {
 	if admin.CheckAdmin(sender) {
-		enabled = false
+		disabled[channel] = true
 	}
 }
 
-func HandleEnable(_ []string, sender string, _ string) {
+func HandleEnable(_ []string, sender string, channel string) {
 	if admin.CheckAdmin(sender) {
-		enabled = false
+		disabled[channel] = false
 	}
 }
 
