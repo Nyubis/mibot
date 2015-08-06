@@ -74,17 +74,6 @@ func HandleShorten(_ []string, sender string, channel string) {
 	bot.SendMessage(channel, sender + ": " + short)
 }
 
-func ReceiveAuth(msg ircmessage.Message) {
-	l := len(msg.Params) - 1
-	flags := msg.Params[l] // Last element
-	nick := msg.Params[l-1] // Second to last
-
-	fmt.Println(flags, nick)
-	if strings.Contains(flags, "r") {
-		todo(nick)
-	}
-}
-
 func HandleDisable(_ []string, sender string, _ string) {
 	if admin.CheckAdmin(sender) {
 		enabled = false
