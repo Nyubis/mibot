@@ -4,7 +4,6 @@ import (
 	"regexp"
 	"net/http"
 	"io"
-	"html"
 	"fmt"
 	"strings"
 	"errors"
@@ -14,6 +13,8 @@ import (
 	"github.com/nyubis/mibot/core"
 	"github.com/nyubis/mibot/modules/admin"
 	"github.com/nyubis/mibot/utils"
+
+	"golang.org/x/net/html"
 )
 
 const (
@@ -26,7 +27,6 @@ const (
 )
 
 var httpRe = regexp.MustCompile("https?://[^\\s]*")
-var titleRe = regexp.MustCompile("<title>\\s*(?P<want>.*)\\s*</title>")
 
 var lastURL string
 var disabled map[string]bool
@@ -55,10 +55,12 @@ func Handle(msg ircmessage.Message) {
 
 	lastURL = url
 	if !disabled[msg.Channel] {
-		title := findTitle(url)
+		title := getAndFindTitle(url)
 		if title != "" {
 			bot.SendMessage(msg.Channel, "[URL] " + title)
 		}
+	} else {
+		fmt.Println("Link detected, but", msg.Channel, "is disabled")
 	}
 }
 
@@ -88,7 +90,7 @@ func HandleEnable(_ []string, sender string, channel string) {
 	}
 }
 
-func findTitle(url string) string {
+func getAndFindTitle(url string) string {
 	resp, err := client.Get(url)
 	if err != nil {
 		return ""
@@ -107,13 +109,35 @@ func findTitle(url string) string {
 		}
 	}
 
-	matches := titleRe.FindStringSubmatch(string(buf[:n]))
-	if len(matches) < 2 {
-		return ""
+	title := findTitle(string(buf[:n]))
+	if title != "" {
+		return utils.Truncate(title, titleLimit)
+	}
+	return ""
+}
+
+func findTitle(data string) string {
+	tz := html.NewTokenizer(strings.NewReader(data))
+	inbody := false
+	for {
+		t := tz.Next()
+		tn, _ := tz.TagName()
+		switch(t) {
+		case html.ErrorToken:
+			fmt.Println(tz.Err())
+			return ""
+		case html.TextToken:
+			if inbody {
+				return string(tz.Text())
+			}
+		case html.StartTagToken:
+			inbody = inbody || string(tn) == "title"
+		case html.EndTagToken:
+			inbody = inbody && string(tn) != "title"
+		}
 	}
 
-	title := html.UnescapeString(matches[1])
-	return utils.Truncate(title, titleLimit)
+	return ""
 }
 
 func shorten(url string) (string, error) {
