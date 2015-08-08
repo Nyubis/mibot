@@ -17,6 +17,7 @@ type module struct {
 
 var modules []module = make([]module, 0)
 var commands map[string]func([]string, string, string) = make(map[string]func([]string, string, string), 0)
+var Ignored map[string]bool = make(map[string]bool)
 
 func AddModule(triggerType string, handler func(ircmessage.Message)) {
 	modules = append(modules, module{triggerType, handler})
@@ -29,6 +30,9 @@ func AddCommand(cmd string, handler func([]string, string, string)) {
 }
 
 func PassToModules(msg ircmessage.Message) {
+	if Ignored[msg.Nick] {
+		return
+	}
 	if msg.Command == "PRIVMSG" && msg.Content[0] == commandChar {
 		doCommand(msg)
 	}

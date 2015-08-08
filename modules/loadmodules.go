@@ -7,6 +7,7 @@ import (
 	"github.com/nyubis/mibot/modules/nickserv"
 	"github.com/nyubis/mibot/modules/channels"
 	"github.com/nyubis/mibot/modules/admin"
+	"github.com/nyubis/mibot/modules/ignore"
 )
 
 func Load(bot *core.Bot) {
@@ -26,4 +27,5 @@ func Load(bot *core.Bot) {
 	admin.Init(bot)
 	nickserv.Init(bot)
 	channels.Init(bot)
+	ignore.Init(bot)
 }

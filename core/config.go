@@ -28,6 +28,9 @@ type ConfStruct struct {
 	Admins struct {
 		Admins []string
 	}
+	Ignore struct {
+		Ignored []string
+	}
 }
 
 var Config ConfStruct
