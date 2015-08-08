@@ -13,6 +13,10 @@ var bot *core.Bot
 func Init(ircbot *core.Bot) {
 	bot = ircbot
 
+	LoadCfg()
+}
+
+func LoadCfg() {
 	autojoin = prefix(core.Config.Channels.Autojoin)
 	blacklist = prefix(core.Config.Channels.Blacklist)
 }

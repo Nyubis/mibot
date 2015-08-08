@@ -8,6 +8,7 @@ import (
 	"github.com/nyubis/mibot/modules/channels"
 	"github.com/nyubis/mibot/modules/admin"
 	"github.com/nyubis/mibot/modules/ignore"
+	"github.com/nyubis/mibot/modules/config"
 )
 
 func Load(bot *core.Bot) {
@@ -21,6 +22,7 @@ func Load(bot *core.Bot) {
 	core.AddCommand("shorten", linktitle.HandleShorten)
 	core.AddCommand("enable", linktitle.HandleEnable)
 	core.AddCommand("disable", linktitle.HandleDisable)
+	core.AddCommand("reload", config.HandleReload)
 
 	replies.Init(bot)
 	linktitle.Init(bot)
@@ -28,4 +30,12 @@ func Load(bot *core.Bot) {
 	nickserv.Init(bot)
 	channels.Init(bot)
 	ignore.Init(bot)
+	config.ReloadFunc = reload
 }
+
+func reload() {
+	ignore.LoadCfg()
+	channels.LoadCfg()
+	replies.LoadCfg()
+}
+
