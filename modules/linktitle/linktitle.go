@@ -111,7 +111,7 @@ func getAndFindTitle(url string) string {
 
 	title := findTitle(string(buf[:n]))
 	if title != "" {
-		return utils.Truncate(title, titleLimit)
+		return utils.Truncate(strings.TrimSpace(title), titleLimit)
 	}
 	return ""
 }
