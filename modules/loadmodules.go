@@ -23,6 +23,7 @@ func Load(bot *core.Bot) {
 	core.AddCommand("enable", linktitle.HandleEnable)
 	core.AddCommand("disable", linktitle.HandleDisable)
 	core.AddCommand("reload", config.HandleReload)
+	core.AddCommand("join", channels.HandleJoinCommand)
 
 	replies.Init(bot)
 	linktitle.Init(bot)
