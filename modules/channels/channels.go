@@ -5,6 +5,7 @@ import (
 	"github.com/nyubis/mibot/core"
 	"github.com/nyubis/mibot/utils"
 	"github.com/nyubis/mibot/modules/admin"
+	"github.com/nyubis/mibot/modules/floodcontrol"
 )
 
 var autojoin []string
@@ -30,7 +31,9 @@ func Autojoin(msg ircmessage.Message) {
 
 func InviteJoin(msg ircmessage.Message) {
 	if len(msg.Content) > 0 && verify_channel(msg.Content) {
-		bot.SendJoin(msg.Content)
+		if !floodcontrol.FloodCheck("invite", msg.Nick, msg.Channel) {
+			bot.SendJoin(msg.Content)
+		}
 	}
 }
 
@@ -46,7 +49,7 @@ func HandleJoinCommand(channels []string, sender string, fromchannel string) {
 
 func verify_channel(channel string) bool {
 	return channel[0] == '#' && !utils.Contains(blacklist, channel)
-}	
+}
 
 func prefix(channels []string) []string {
 	for i, c := range channels {

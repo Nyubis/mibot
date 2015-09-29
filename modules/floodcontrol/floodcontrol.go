@@ -38,11 +38,12 @@ func Init(_ *core.Bot) {
 func FloodCheck(event, nick, channel string) bool {
 	now := time.Now()
 	recent[event] = append(recent[event], record{nick, channel, now})
-	fmt.Println(recent[event])
 	cutofftime := now.Add(time.Duration(-1 * memtime[event]) * time.Second)
 	slice := removeBefore(event, cutofftime)
 
-	fmt.Printf("%s in %s has used %s %d times since %d\n", nick, channel, event, len(slice), cutofftime)
+	if len(slice) > maxcount[event] {
+		fmt.Printf("%s in %s has used %s %d times in the past %d seconds", nick, channel, event, len(slice), maxcount[event])
+	}
 
 	return len(slice) > maxcount[event]
 }
