@@ -81,12 +81,14 @@ func HandleShorten(_ []string, sender string, channel string) {
 func HandleDisable(_ []string, sender string, channel string) {
 	if admin.CheckAdmin(sender) {
 		disabled[channel] = true
+		bot.SendMessage(channel, "Link reading disabled for this channel")
 	}
 }
 
 func HandleEnable(_ []string, sender string, channel string) {
 	if admin.CheckAdmin(sender) {
 		disabled[channel] = false
+		bot.SendMessage(channel, "Link reading enabled for this channel")
 	}
 }
 
