@@ -9,6 +9,7 @@ import (
 	"github.com/nyubis/mibot/modules/admin"
 	"github.com/nyubis/mibot/modules/ignore"
 	"github.com/nyubis/mibot/modules/config"
+	"github.com/nyubis/mibot/modules/floodcontrol"
 )
 
 func Load(bot *core.Bot) {
@@ -31,6 +32,7 @@ func Load(bot *core.Bot) {
 	nickserv.Init(bot)
 	channels.Init(bot)
 	ignore.Init(bot)
+	floodcontrol.Init(bot)
 	config.ReloadFunc = reload
 }
 

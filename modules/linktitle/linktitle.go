@@ -12,6 +12,7 @@ import (
 	"github.com/nyubis/mibot/ircmessage"
 	"github.com/nyubis/mibot/core"
 	"github.com/nyubis/mibot/modules/admin"
+	"github.com/nyubis/mibot/modules/floodcontrol"
 	"github.com/nyubis/mibot/utils"
 
 	"golang.org/x/net/html"
@@ -50,6 +51,10 @@ func Init(ircbot *core.Bot) {
 func Handle(msg ircmessage.Message) {
 	url := httpRe.FindString(msg.Content)
 	if url == "" {
+		return
+	}
+
+	if floodcontrol.FloodCheck("link", msg.Nick, msg.Channel) {
 		return
 	}
 
