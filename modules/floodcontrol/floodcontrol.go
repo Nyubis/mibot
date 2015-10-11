@@ -42,7 +42,7 @@ func FloodCheck(event, nick, channel string) bool {
 	slice := removeBefore(event, cutofftime)
 
 	if len(slice) > maxcount[event] {
-		fmt.Printf("%s in %s has used %s %d times in the past %d seconds", nick, channel, event, len(slice), maxcount[event])
+		fmt.Printf("%s in %s has used %s %d times in the past %d seconds\n", nick, channel, event, len(slice), maxcount[event])
 	}
 
 	return len(slice) > maxcount[event]

@@ -21,7 +21,7 @@ import (
 const (
 	redirectLimit = 10
 	titleLimit    = 200
-	timeout       = 2500
+	timeout       = 5000
 	byteLimit     = 65536
 
 	shortenURL    = "http://is.gd/create.php?format=simple&url="
@@ -100,6 +100,7 @@ func HandleEnable(_ []string, sender string, channel string) {
 func getAndFindTitle(url string) string {
 	resp, err := client.Get(url)
 	if err != nil {
+		fmt.Println(err)
 		return ""
 	}
 	defer resp.Body.Close()
