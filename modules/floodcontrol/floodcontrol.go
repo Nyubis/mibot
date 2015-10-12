@@ -29,9 +29,9 @@ func Init(_ *core.Bot) {
 	memtime = make(map[string]int)
 	maxcount = make(map[string]int)
 	// These should probably be read from the config...
-	memtime["invite"] = 10
+	memtime["invite"] = 15
 	maxcount["invite"] = 2
-	memtime["link"] = 10
+	memtime["link"] = 12
 	maxcount["link"] = 3
 }
 
