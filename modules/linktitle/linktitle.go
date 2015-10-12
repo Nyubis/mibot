@@ -48,6 +48,7 @@ func Init(ircbot *core.Bot) {
 	disabled = make(map[string]bool)
 }
 
+// Incoming event for and irc message
 func Handle(msg ircmessage.Message) {
 	url := httpRe.FindString(msg.Content)
 	if url == "" {
@@ -69,6 +70,7 @@ func Handle(msg ircmessage.Message) {
 	}
 }
 
+// Incoming event for @shorten
 func HandleShorten(_ []string, sender string, channel string) {
 	if lastURL == "" {
 		fmt.Println("No last url to shorten")
@@ -83,6 +85,7 @@ func HandleShorten(_ []string, sender string, channel string) {
 	bot.SendMessage(channel, sender + ": " + short)
 }
 
+// Incoming event for @disable
 func HandleDisable(_ []string, sender string, channel string) {
 	if admin.CheckAdmin(sender) {
 		disabled[channel] = true
@@ -90,6 +93,7 @@ func HandleDisable(_ []string, sender string, channel string) {
 	}
 }
 
+// Incoming event for @enable
 func HandleEnable(_ []string, sender string, channel string) {
 	if admin.CheckAdmin(sender) {
 		disabled[channel] = false
@@ -97,6 +101,7 @@ func HandleEnable(_ []string, sender string, channel string) {
 	}
 }
 
+// Do the http request and continue to findTitle()
 func getAndFindTitle(url string) string {
 	resp, err := client.Get(url)
 	if err != nil {
@@ -107,7 +112,7 @@ func getAndFindTitle(url string) string {
 
 	buf := make([]byte, byteLimit)
 	n, _ := io.ReadFull(resp.Body, buf)
-	
+
 	contentType := resp.Header.Get("Content-Type")
 	if !strings.Contains(contentType, "text/html") {
 		if resp.ContentLength >= 0 {
@@ -119,11 +124,13 @@ func getAndFindTitle(url string) string {
 
 	title := findTitle(string(buf[:n]))
 	if title != "" {
-		return utils.Truncate(strings.TrimSpace(title), titleLimit)
+		// Strip urls in the title, remove spaces on the beginning and end, and truncate it
+		return utils.Truncate(strings.TrimSpace(stripUrls(title)), titleLimit)
 	}
 	return ""
 }
 
+// Parse the HTML in a string and extract the title
 func findTitle(data string) string {
 	tz := html.NewTokenizer(strings.NewReader(data))
 	inbody := false
@@ -148,6 +155,12 @@ func findTitle(data string) string {
 	return ""
 }
 
+// Used to remove the url from the eventual title to avoid botloops
+func stripUrls(title string) string {
+	return httpRe.ReplaceAllString(title, "")
+}
+
+// Pass a url through the is.gd url shortener
 func shorten(url string) (string, error) {
 	resp, err := client.Get(shortenURL + url)
 	if err != nil {
