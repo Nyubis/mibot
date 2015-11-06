@@ -7,7 +7,7 @@ import (
 )
 
 func CheckAdmin(nick string) bool {
-	if utils.Contains(core.Config.Admins.Admins, nick) {
+	if utils.Contains(core.Config.Admins, nick) {
 		fmt.Println(nick, "verified as admin")
 		return IsAuthenticated(nick)
 	}
