@@ -13,4 +13,3 @@ func HandleReload(_ []string, sender string, channel string) {
 		ReloadFunc()
 	}
 }
-		

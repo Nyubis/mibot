@@ -46,6 +46,15 @@ var client = &http.Client{
 func Init(ircbot *core.Bot) {
 	bot = ircbot
 	disabled = make(map[string]bool)
+	LoadCfg()
+}
+
+func LoadCfg() {
+	for k, v := range core.Config.Channelsettings {
+		if k != "global" && v.Enabled == false {
+			disabled[k] = true
+		}
+	}
 }
 
 // Incoming event for and irc message

@@ -40,5 +40,6 @@ func reload() {
 	ignore.LoadCfg()
 	channels.LoadCfg()
 	replies.LoadCfg()
+	linktitle.LoadCfg()
 }
 
