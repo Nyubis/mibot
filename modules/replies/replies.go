@@ -3,8 +3,6 @@ package replies
 import (
 	"github.com/nyubis/mibot/ircmessage"
 	"github.com/nyubis/mibot/core"
-	"strings"
-	"fmt"
 )
 
 var bot *core.Bot
