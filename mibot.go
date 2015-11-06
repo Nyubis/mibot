@@ -8,9 +8,9 @@ import (
 func main() {
 	core.LoadConfig()
 	ircbot := core.NewBot(
-		core.Config.Main.Nick,
-		core.Config.Main.Server,
-		core.Config.Main.Port)
+		core.Config.Nick,
+		core.Config.Server,
+		core.Config.Port)
 	defer ircbot.Disconnect()
 	modules.Load(ircbot)
 	ircbot.Connect()
