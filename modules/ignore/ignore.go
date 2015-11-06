@@ -13,7 +13,7 @@ func Init(ircbot *core.Bot) {
 
 func LoadCfg() {
 	core.Ignored = make(map[string]bool)
-	for _, nick := range core.Config.Ignore.Ignored {
+	for _, nick := range core.Config.Ignored {
 		core.Ignored[nick] = true
 	}
 }
