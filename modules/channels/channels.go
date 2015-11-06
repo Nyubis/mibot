@@ -19,8 +19,8 @@ func Init(ircbot *core.Bot) {
 }
 
 func LoadCfg() {
-	autojoin = prefix(core.Config.Channels.Autojoin)
-	blacklist = prefix(core.Config.Channels.Blacklist)
+	autojoin = core.Config.Channels.Autojoin
+	blacklist = core.Config.Channels.Blacklist
 }
 
 func Autojoin(msg ircmessage.Message) {
@@ -49,11 +49,4 @@ func HandleJoinCommand(channels []string, sender string, fromchannel string) {
 
 func verify_channel(channel string) bool {
 	return channel[0] == '#' && !utils.Contains(blacklist, channel)
-}
-
-func prefix(channels []string) []string {
-	for i, c := range channels {
-		channels[i] = "#" + c
-	}
-	return channels
 }
