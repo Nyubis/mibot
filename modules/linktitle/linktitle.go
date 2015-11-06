@@ -51,7 +51,7 @@ func Init(ircbot *core.Bot) {
 
 func LoadCfg() {
 	for k, v := range core.Config.Channelsettings {
-		if k != "global" && v.Enabled == false {
+		if k != "global" && v.Disabled {
 			disabled[k] = true
 		}
 	}

@@ -26,7 +26,7 @@ type ConfStruct struct {
 }
 
 type Channelsetting struct {
-	Enabled bool
+	Disabled bool
 	Replies map[string]string
 	Blacklist []string
 }
