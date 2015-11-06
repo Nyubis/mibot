@@ -1,44 +1,45 @@
 package core
 
 import (
-	"github.com/scalingdata/gcfg"
+	"os"
+	"fmt"
 	"log"
+	"github.com/DisposaBoy/JsonConfigReader"
+	"encoding/json"
 )
 
 const (
-	filename = "mibot.cfg"
+	filename = "config.json"
 )
 
 type ConfStruct struct {
-	Main struct {
-		Nick string
-		Server string
-		Port int
-	}
-	Nickserv struct {
-		Password_file string
-	}
+	Nick string
+	Server string
+	Port int
 	Channels struct {
 		Autojoin []string
 		Blacklist []string
 	}
-	Replies struct {
-		Replies []string
-	}
-	Admins struct {
-		Admins []string
-	}
-	Ignore struct {
-		Ignored []string
-	}
+	Admins []string
+	Ignored []string
+	Channelsettings map[string]Channelsetting
+}
+
+type Channelsetting struct {
+	Enabled bool
+	Replies map[string]string
+	Blacklist []string
 }
 
 var Config ConfStruct
 
 func LoadConfig() {
-	err := gcfg.ReadFileInto(&Config, filename)
+	file, err := os.Open(filename)
 	if err != nil {
 		log.Fatal("Failed to read config:\n", err)
 	}
+	reader := JsonConfigReader.New(file)
+	json.NewDecoder(reader).Decode(&Config)
+	fmt.Println(Config)
 }
 
