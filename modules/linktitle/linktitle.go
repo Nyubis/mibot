@@ -28,6 +28,7 @@ const (
 )
 
 var httpRe = regexp.MustCompile("https?://[^\\s]*")
+var domainRe = regexp.MustCompile("https?://([^\\s/]*)")
 
 var lastURL string
 var disabled map[string]bool
@@ -69,7 +70,7 @@ func Handle(msg ircmessage.Message) {
 	}
 
 	lastURL = url
-	if !disabled[msg.Channel] {
+	if !disabled[msg.Channel] && !checkblacklist(url, msg.Channel) {
 		title := getAndFindTitle(url)
 		if title != "" {
 			bot.SendMessage(msg.Channel, "[URL] " + title)
@@ -181,4 +182,14 @@ func shorten(url string) (string, error) {
 	n, _ := io.ReadFull(resp.Body, buf)
 
 	return string(buf[:n]), nil
+}
+
+// Check whether a domain is blacklisted in a particular channel
+func checkblacklist(url string, channel string) bool {
+	domain := domainRe.FindStringSubmatch(url)[1]
+	if utils.Contains(core.Config.Channelsettings["global"].Blacklist, domain) {
+		return true
+	}
+	settings, has := core.Config.Channelsettings[channel]
+	return has && utils.Contains(settings.Blacklist, domain)
 }

@@ -23,7 +23,7 @@
 		},
 		"#bhottu": {
 			// Blacklisted domains, links from these domains will not be read
-			"Blacklist": ["http://example.com"],
+			"Blacklist": ["example.com"],
 			// Whether links should be read by default on this channel
 			"Disabled": true
 		}
