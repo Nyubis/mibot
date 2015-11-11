@@ -11,7 +11,7 @@
 	"Admins": ["Tadpole"],
 	// List of nicks from whom the messages will be ignored
 	// It's a good idea to ignore other bots
-	"Ignore": ["Combot", "Nimdok"],
+	"Ignored": ["Combot", "Nimdok"],
 	// Settings that can be set on a per-channel basis
 	"Channelsettings": {
 		// Global settings apply to all channels, but can be overridden in the individual settings
@@ -21,7 +21,7 @@
 				":ping": "pong"
 			}
 		},
-		"#bhottu": {
+		"#bots": {
 			// Blacklisted domains, links from these domains will not be read
 			"Blacklist": ["example.com"],
 			// Whether links should be read by default on this channel
