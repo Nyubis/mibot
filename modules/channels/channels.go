@@ -47,6 +47,16 @@ func HandleJoinCommand(channels []string, sender string, fromchannel string) {
 	}
 }
 
+func HandlePartCommand(channels []string, sender string, fromchannel string) {
+	if admin.CheckAdmin(sender) {
+		for _, channel := range channels {
+			if verify_channel(channel) {
+				bot.SendPart(channel)
+			}
+		}
+	}
+}
+
 func verify_channel(channel string) bool {
 	return channel[0] == '#' && !utils.Contains(blacklist, channel)
 }

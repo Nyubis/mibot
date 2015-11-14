@@ -44,6 +44,10 @@ func (bot *Bot) SendJoin(channel string) {
 	bot.SendCommand("JOIN " + channel)
 }
 
+func (bot *Bot) SendPart(channel string) {
+	bot.SendCommand("PART " + channel)
+}
+
 func (bot *Bot) Connect() {
 	conn, err := net.Dial("tcp", fmt.Sprintf("%s:%d", bot.server, bot.port))
 	if err != nil {
