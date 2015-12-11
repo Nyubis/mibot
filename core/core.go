@@ -106,7 +106,7 @@ func sanitise(cmd string) string {
 func (bot *Bot) outputHandler() {
 	for {
 		out := <-bot.coutput
-		fmt.Fprintf(bot.conn, out)
+		fmt.Fprint(bot.conn, out)
 	}
 }
 
