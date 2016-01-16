@@ -8,7 +8,7 @@ import (
 	"log"
 	"net/textproto"
 
-	"github.com/nyubis/mibot/ircmessage"
+	"github.com/Nyubis/mibot/ircmessage"
 )
 
 type Bot struct {

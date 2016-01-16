@@ -1,8 +1,8 @@
 package replies
 
 import (
-	"github.com/nyubis/mibot/ircmessage"
-	"github.com/nyubis/mibot/core"
+	"github.com/Nyubis/mibot/ircmessage"
+	"github.com/Nyubis/mibot/core"
 )
 
 var bot *core.Bot

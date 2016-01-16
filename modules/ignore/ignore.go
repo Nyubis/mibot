@@ -1,7 +1,7 @@
 package ignore
 
 import (
-	"github.com/nyubis/mibot/core"
+	"github.com/Nyubis/mibot/core"
 )
 
 var bot *core.Bot

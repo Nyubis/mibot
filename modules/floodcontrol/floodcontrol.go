@@ -3,7 +3,7 @@ package floodcontrol
 import (
 	"time"
 	"fmt"
-	"github.com/nyubis/mibot/core"
+	"github.com/Nyubis/mibot/core"
 )
 
 // Keep a record of events by type, nick and channel, and store the timestamp

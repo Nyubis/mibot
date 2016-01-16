@@ -3,7 +3,7 @@ package core
 import (
 	"fmt"
 	"strings"
-	"github.com/nyubis/mibot/ircmessage"
+	"github.com/Nyubis/mibot/ircmessage"
 )
 
 const (

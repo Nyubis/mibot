@@ -1,15 +1,15 @@
 package modules
 
 import (
-	"github.com/nyubis/mibot/core"
-	"github.com/nyubis/mibot/modules/linktitle"
-	"github.com/nyubis/mibot/modules/replies"
-	"github.com/nyubis/mibot/modules/nickserv"
-	"github.com/nyubis/mibot/modules/channels"
-	"github.com/nyubis/mibot/modules/admin"
-	"github.com/nyubis/mibot/modules/ignore"
-	"github.com/nyubis/mibot/modules/config"
-	"github.com/nyubis/mibot/modules/floodcontrol"
+	"github.com/Nyubis/mibot/core"
+	"github.com/Nyubis/mibot/modules/linktitle"
+	"github.com/Nyubis/mibot/modules/replies"
+	"github.com/Nyubis/mibot/modules/nickserv"
+	"github.com/Nyubis/mibot/modules/channels"
+	"github.com/Nyubis/mibot/modules/admin"
+	"github.com/Nyubis/mibot/modules/ignore"
+	"github.com/Nyubis/mibot/modules/config"
+	"github.com/Nyubis/mibot/modules/floodcontrol"
 )
 
 func Load(bot *core.Bot) {

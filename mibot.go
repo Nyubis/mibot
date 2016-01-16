@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/nyubis/mibot/core"
-	"github.com/nyubis/mibot/modules"
+	"github.com/Nyubis/mibot/core"
+	"github.com/Nyubis/mibot/modules"
 )
 
 func main() {
