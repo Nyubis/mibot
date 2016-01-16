@@ -1,16 +1,16 @@
 package linktitle
 
 import (
-	"regexp"
-	"net/http"
-	"io"
-	"fmt"
-	"strings"
 	"errors"
+	"fmt"
+	"io"
+	"net/http"
+	"regexp"
+	"strings"
 	"time"
 
-	"github.com/Nyubis/mibot/ircmessage"
 	"github.com/Nyubis/mibot/core"
+	"github.com/Nyubis/mibot/ircmessage"
 	"github.com/Nyubis/mibot/modules/admin"
 	"github.com/Nyubis/mibot/modules/floodcontrol"
 	"github.com/Nyubis/mibot/utils"
@@ -24,7 +24,7 @@ const (
 	timeout       = 5000
 	byteLimit     = 65536
 
-	shortenURL    = "http://is.gd/create.php?format=simple&url="
+	shortenURL = "http://is.gd/create.php?format=simple&url="
 )
 
 var httpRe = regexp.MustCompile("https?://[^\\s]*")
@@ -41,7 +41,7 @@ var client = &http.Client{
 		}
 		return nil
 	},
-	Timeout: time.Duration(timeout)*time.Millisecond,
+	Timeout: time.Duration(timeout) * time.Millisecond,
 }
 
 func Init(ircbot *core.Bot) {
@@ -74,7 +74,7 @@ func Handle(msg ircmessage.Message) {
 	if !disabled[msg.Channel] && !checkblacklist(url, msg.Channel) {
 		title := getAndFindTitle(url)
 		if title != "" {
-			bot.SendMessage(msg.Channel, "[URL] " + title)
+			bot.SendMessage(msg.Channel, "[URL] "+title)
 		}
 	} else {
 		fmt.Println("Link detected, but", msg.Channel, "is disabled")
@@ -93,7 +93,7 @@ func HandleShorten(_ []string, sender string, channel string) {
 		fmt.Println(err)
 		return
 	}
-	bot.SendMessage(channel, sender + ": " + short)
+	bot.SendMessage(channel, sender+": "+short)
 }
 
 // Incoming event for @disable
@@ -148,7 +148,7 @@ func findTitle(data string) string {
 	for {
 		t := tz.Next()
 		tn, _ := tz.TagName()
-		switch(t) {
+		switch t {
 		case html.ErrorToken:
 			fmt.Println(tz.Err())
 			return ""

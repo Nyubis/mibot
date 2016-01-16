@@ -1,16 +1,16 @@
 package ircmessage
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
-	"fmt"
 )
 
 type Message struct {
-	Sender string
-	Nick string
+	Sender  string
+	Nick    string
 	Command string
-	Params []string
+	Params  []string
 	Channel string
 	Content string
 }
@@ -25,7 +25,7 @@ func Parse(line string) Message {
 	msg.Command = matches[2]
 	if matches[3] != "" {
 		msg.Params = strings.Split(strings.Trim(matches[3], " "), " ")
-	} 
+	}
 	if matches[4] != "" {
 		msg.Content = matches[4][1:] // Remove leading ':'
 	}
@@ -45,10 +45,9 @@ func Parse(line string) Message {
 }
 
 func PrivMsg(to string, content string) string {
-	return fmt.Sprintf("PRIVMSG %s :%s", to, content) 
+	return fmt.Sprintf("PRIVMSG %s :%s", to, content)
 }
 
 func Join(channel string) string {
-	return fmt.Sprintf("JOIN %s", channel) 
+	return fmt.Sprintf("JOIN %s", channel)
 }
-

@@ -1,11 +1,11 @@
 package channels
 
 import (
-	"github.com/Nyubis/mibot/ircmessage"
 	"github.com/Nyubis/mibot/core"
-	"github.com/Nyubis/mibot/utils"
+	"github.com/Nyubis/mibot/ircmessage"
 	"github.com/Nyubis/mibot/modules/admin"
 	"github.com/Nyubis/mibot/modules/floodcontrol"
+	"github.com/Nyubis/mibot/utils"
 )
 
 var autojoin []string

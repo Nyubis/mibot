@@ -1,11 +1,11 @@
 package core
 
 import (
-	"os"
-	"fmt"
-	"log"
-	"github.com/DisposaBoy/JsonConfigReader"
 	"encoding/json"
+	"fmt"
+	"github.com/DisposaBoy/JsonConfigReader"
+	"log"
+	"os"
 )
 
 const (
@@ -13,21 +13,21 @@ const (
 )
 
 type ConfStruct struct {
-	Nick string
-	Server string
-	Port int
+	Nick     string
+	Server   string
+	Port     int
 	Channels struct {
-		Autojoin []string
+		Autojoin  []string
 		Blacklist []string
 	}
-	Admins []string
-	Ignored []string
+	Admins          []string
+	Ignored         []string
 	Channelsettings map[string]Channelsetting
 }
 
 type Channelsetting struct {
-	Disabled bool
-	Replies map[string]string
+	Disabled  bool
+	Replies   map[string]string
 	Blacklist []string
 }
 
@@ -42,4 +42,3 @@ func LoadConfig() {
 	json.NewDecoder(reader).Decode(&Config)
 	fmt.Println(Config)
 }
-

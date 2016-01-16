@@ -2,14 +2,14 @@ package modules
 
 import (
 	"github.com/Nyubis/mibot/core"
-	"github.com/Nyubis/mibot/modules/linktitle"
-	"github.com/Nyubis/mibot/modules/replies"
-	"github.com/Nyubis/mibot/modules/nickserv"
-	"github.com/Nyubis/mibot/modules/channels"
 	"github.com/Nyubis/mibot/modules/admin"
-	"github.com/Nyubis/mibot/modules/ignore"
+	"github.com/Nyubis/mibot/modules/channels"
 	"github.com/Nyubis/mibot/modules/config"
 	"github.com/Nyubis/mibot/modules/floodcontrol"
+	"github.com/Nyubis/mibot/modules/ignore"
+	"github.com/Nyubis/mibot/modules/linktitle"
+	"github.com/Nyubis/mibot/modules/nickserv"
+	"github.com/Nyubis/mibot/modules/replies"
 )
 
 func Load(bot *core.Bot) {
@@ -43,4 +43,3 @@ func reload() {
 	replies.LoadCfg()
 	linktitle.LoadCfg()
 }
-

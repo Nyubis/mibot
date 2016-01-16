@@ -1,8 +1,8 @@
 package replies
 
 import (
-	"github.com/Nyubis/mibot/ircmessage"
 	"github.com/Nyubis/mibot/core"
+	"github.com/Nyubis/mibot/ircmessage"
 )
 
 var bot *core.Bot
@@ -15,7 +15,7 @@ func Init(ircbot *core.Bot) {
 }
 
 func LoadCfg() {
-	channelreplies= make(map[string]map[string]string)
+	channelreplies = make(map[string]map[string]string)
 	for k, v := range core.Config.Channelsettings {
 		if k == "global" {
 			globalreplies = v.Replies
@@ -24,7 +24,6 @@ func LoadCfg() {
 		}
 	}
 }
-
 
 func Handle(msg ircmessage.Message) {
 	// Check whether we have a set of replies specific to this channel
