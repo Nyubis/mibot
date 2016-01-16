@@ -14,7 +14,7 @@ func Contains(hay []string, needle string) bool {
 }
 
 func ParseSize(bytes int64) string {
-	units := [...]string{ "B", "KiB", "MiB", "GiB", "TiB", "PiB" }
+	units := [...]string{"B", "KiB", "MiB", "GiB", "TiB", "PiB"}
 	size := float64(bytes)
 	var i int
 
@@ -31,5 +31,3 @@ func Truncate(s string, limit int) string {
 	}
 	return s[:limit] + "..."
 }
-
-

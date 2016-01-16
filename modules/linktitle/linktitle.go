@@ -1,19 +1,19 @@
 package linktitle
 
 import (
-	"regexp"
-	"net/http"
-	"io"
-	"fmt"
-	"strings"
 	"errors"
+	"fmt"
+	"io"
+	"net/http"
+	"regexp"
+	"strings"
 	"time"
 
-	"github.com/nyubis/mibot/ircmessage"
-	"github.com/nyubis/mibot/core"
-	"github.com/nyubis/mibot/modules/admin"
-	"github.com/nyubis/mibot/modules/floodcontrol"
-	"github.com/nyubis/mibot/utils"
+	"github.com/Nyubis/mibot/core"
+	"github.com/Nyubis/mibot/ircmessage"
+	"github.com/Nyubis/mibot/modules/admin"
+	"github.com/Nyubis/mibot/modules/floodcontrol"
+	"github.com/Nyubis/mibot/utils"
 
 	"golang.org/x/net/html"
 )
@@ -24,13 +24,13 @@ const (
 	timeout       = 5000
 	byteLimit     = 65536
 
-	shortenURL    = "http://is.gd/create.php?format=simple&url="
+	shortenURL = "http://is.gd/create.php?format=simple&url="
 )
 
 var httpRe = regexp.MustCompile("https?://[^\\s]*")
 var domainRe = regexp.MustCompile("https?://([^\\s/]*)")
 
-var lastURL string
+var lastURL map[string]string
 var disabled map[string]bool
 
 var bot *core.Bot
@@ -41,11 +41,12 @@ var client = &http.Client{
 		}
 		return nil
 	},
-	Timeout: time.Duration(timeout)*time.Millisecond,
+	Timeout: time.Duration(timeout) * time.Millisecond,
 }
 
 func Init(ircbot *core.Bot) {
 	bot = ircbot
+	lastURL = make(map[string]string)
 	disabled = make(map[string]bool)
 	LoadCfg()
 }
@@ -69,11 +70,11 @@ func Handle(msg ircmessage.Message) {
 		return
 	}
 
-	lastURL = url
+	lastURL[msg.Channel] = url
 	if !disabled[msg.Channel] && !checkblacklist(url, msg.Channel) {
 		title := getAndFindTitle(url)
 		if title != "" {
-			bot.SendMessage(msg.Channel, "[URL] " + title)
+			bot.SendMessage(msg.Channel, "[URL] "+title)
 		}
 	} else {
 		fmt.Println("Link detected, but", msg.Channel, "is disabled")
@@ -82,17 +83,17 @@ func Handle(msg ircmessage.Message) {
 
 // Incoming event for @shorten
 func HandleShorten(_ []string, sender string, channel string) {
-	if lastURL == "" {
+	if lastURL[channel] == "" {
 		fmt.Println("No last url to shorten")
 		return
 	}
-	short, err := shorten(lastURL)
+	short, err := shorten(lastURL[channel])
 	if err != nil {
-		fmt.Println("Failed to shorten url", lastURL)
+		fmt.Println("Failed to shorten url", lastURL[channel])
 		fmt.Println(err)
 		return
 	}
-	bot.SendMessage(channel, sender + ": " + short)
+	bot.SendMessage(channel, sender+": "+short)
 }
 
 // Incoming event for @disable
@@ -147,7 +148,7 @@ func findTitle(data string) string {
 	for {
 		t := tz.Next()
 		tn, _ := tz.TagName()
-		switch(t) {
+		switch t {
 		case html.ErrorToken:
 			fmt.Println(tz.Err())
 			return ""

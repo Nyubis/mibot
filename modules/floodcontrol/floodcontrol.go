@@ -1,9 +1,9 @@
 package floodcontrol
 
 import (
-	"time"
 	"fmt"
-	"github.com/nyubis/mibot/core"
+	"github.com/Nyubis/mibot/core"
+	"time"
 )
 
 // Keep a record of events by type, nick and channel, and store the timestamp
@@ -12,15 +12,17 @@ import (
 // Return true if this count exceeds a certain value (so the module will know to ignore it)
 
 type record struct {
-	nick string
-	channel string
+	nick      string
+	channel   string
 	timestamp time.Time
 }
 
 // The string is the event type (e.g. "link", "invite")
 var recent map[string][]record
+
 // The time in seconds it remembers groups of events (the string is the type of event)
 var memtime map[string]int
+
 // The amount of allowed events in the above timespan
 var maxcount map[string]int
 
@@ -38,7 +40,7 @@ func Init(_ *core.Bot) {
 func FloodCheck(event, nick, channel string) bool {
 	now := time.Now()
 	recent[event] = append(recent[event], record{nick, channel, now})
-	cutofftime := now.Add(time.Duration(-1 * memtime[event]) * time.Second)
+	cutofftime := now.Add(time.Duration(-1*memtime[event]) * time.Second)
 	slice := removeBefore(event, cutofftime)
 
 	if len(slice) > maxcount[event] {
@@ -67,7 +69,3 @@ func removeBefore(event string, timestamp time.Time) []record {
 	recent[event] = slice[i:]
 	return slice[i:]
 }
-
-
-
-

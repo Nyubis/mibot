@@ -2,8 +2,8 @@ package core
 
 import (
 	"fmt"
+	"github.com/Nyubis/mibot/ircmessage"
 	"strings"
-	"github.com/nyubis/mibot/ircmessage"
 )
 
 const (
@@ -52,4 +52,3 @@ func doCommand(msg ircmessage.Message) {
 		handler(split[1:], msg.Nick, msg.Channel)
 	}
 }
-

@@ -2,8 +2,8 @@ package admin
 
 import (
 	"fmt"
-	"github.com/nyubis/mibot/core"
-	"github.com/nyubis/mibot/utils"
+	"github.com/Nyubis/mibot/core"
+	"github.com/Nyubis/mibot/utils"
 )
 
 func CheckAdmin(nick string) bool {

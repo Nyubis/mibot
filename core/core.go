@@ -1,32 +1,32 @@
 package core
 
 import (
-	"strings"
-	"fmt"
-	"net"
 	"bufio"
+	"fmt"
 	"log"
+	"net"
 	"net/textproto"
+	"strings"
 
-	"github.com/nyubis/mibot/ircmessage"
+	"github.com/Nyubis/mibot/ircmessage"
 )
 
 type Bot struct {
-	nick          string
-	user          string
-	server        string
-	port          int
-	conn          net.Conn
-	cinput        chan string
-	coutput       chan string
+	nick    string
+	user    string
+	server  string
+	port    int
+	conn    net.Conn
+	cinput  chan string
+	coutput chan string
 }
 
 func NewBot(nick string, server string, port int) *Bot {
 	return &Bot{
-		nick:          nick,
-		user:          nick,
-		server:        server,
-		port:          port,
+		nick:   nick,
+		user:   nick,
+		server: server,
+		port:   port,
 	}
 }
 
@@ -89,7 +89,7 @@ func (bot *Bot) handleirc(line string) bool {
 		bot.SendCommand("PONG" + line[4:])
 		return true
 	}
-	
+
 	return false
 }
 

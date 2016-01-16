@@ -1,8 +1,8 @@
 package config
 
 import (
-	"github.com/nyubis/mibot/core"
-	"github.com/nyubis/mibot/modules/admin"
+	"github.com/Nyubis/mibot/core"
+	"github.com/Nyubis/mibot/modules/admin"
 )
 
 var ReloadFunc func()
