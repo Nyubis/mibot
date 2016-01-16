@@ -30,7 +30,7 @@ const (
 var httpRe = regexp.MustCompile("https?://[^\\s]*")
 var domainRe = regexp.MustCompile("https?://([^\\s/]*)")
 
-var lastURL string
+var lastURL map[string]string
 var disabled map[string]bool
 
 var bot *core.Bot
@@ -46,6 +46,7 @@ var client = &http.Client{
 
 func Init(ircbot *core.Bot) {
 	bot = ircbot
+	lastURL = make(map[string]string)
 	disabled = make(map[string]bool)
 	LoadCfg()
 }
@@ -69,7 +70,7 @@ func Handle(msg ircmessage.Message) {
 		return
 	}
 
-	lastURL = url
+	lastURL[msg.Channel] = url
 	if !disabled[msg.Channel] && !checkblacklist(url, msg.Channel) {
 		title := getAndFindTitle(url)
 		if title != "" {
@@ -82,13 +83,13 @@ func Handle(msg ircmessage.Message) {
 
 // Incoming event for @shorten
 func HandleShorten(_ []string, sender string, channel string) {
-	if lastURL == "" {
+	if lastURL[channel] == "" {
 		fmt.Println("No last url to shorten")
 		return
 	}
-	short, err := shorten(lastURL)
+	short, err := shorten(lastURL[channel])
 	if err != nil {
-		fmt.Println("Failed to shorten url", lastURL)
+		fmt.Println("Failed to shorten url", lastURL[channel])
 		fmt.Println(err)
 		return
 	}
