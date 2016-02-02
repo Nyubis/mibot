@@ -22,7 +22,12 @@ func ParseSize(bytes int64) string {
 		size /= 1024
 	}
 
-	return fmt.Sprintf("%.2f %s", size, units[i])
+	if i == 0 {
+		// Decimal bytes aren't a thing, so the trailing zeroes we'd otherwise have look silly
+		return fmt.Sprintf("%.0f B", size)
+	} else {
+		return fmt.Sprintf("%.2f %s", size, units[i])
+	}
 }
 
 func Truncate(s string, limit int) string {
