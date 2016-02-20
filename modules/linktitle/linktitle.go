@@ -42,6 +42,11 @@ var client = &http.Client{
 		return nil
 	},
 	Timeout: time.Duration(timeout) * time.Millisecond,
+	Transport: &http.Transport{
+		Dial: func(network string, addr string) (net.Conn, error) {
+			return NewLimitedConn(network, addr, byteLimit * 10)
+		},
+	},
 }
 
 func Init(ircbot *core.Bot) {
