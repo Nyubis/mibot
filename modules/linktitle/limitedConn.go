@@ -1,19 +1,19 @@
 package linktitle
 
 import (
+	"fmt"
 	"io"
 	"net"
 	"time"
-	"fmt"
 )
 
-// This is a Conn that will error out and close the connection
-// after a given byte limit has exceeded
+// This is a Conn that will error out and close the connection after a given byte limit
 type limitedConn struct {
 	c net.Conn
 	r io.LimitedReader
 }
 
+// Return a limitedConn, to be plugged into places that expect a regular net.Conn
 func NewLimitedConn(network string, address string, limit int64) (net.Conn, error) {
 	conn, err := net.Dial(network, address)
 	if err != nil {
@@ -23,12 +23,12 @@ func NewLimitedConn(network string, address string, limit int64) (net.Conn, erro
 	return &limitedConn{conn, io.LimitedReader{conn, limit}}, nil
 }
 
-// Do reading through the LimitedReader, error gracefully
+// Do reading through the LimitedReader
 func (c *limitedConn) Read(buf []byte) (int, error) {
 	n, err := c.r.Read(buf)
 	if err != nil {
 		if c.r.N == 0 { // If the LimitedReader reached its limit
-			fmt.Println("shoutouts to clsr")
+			fmt.Println("Connection limit exceeded.")
 			c.Close()
 		}
 	}

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"regexp"
 	"strings"
@@ -42,9 +43,12 @@ var client = &http.Client{
 		return nil
 	},
 	Timeout: time.Duration(timeout) * time.Millisecond,
+	/* Why do we make a special connection that limits the amount of traffic,
+	*  if we already limit how much bytes we read from the response body?
+	*  Because some people make HTTP headers that are over a gigabyte long. Thanks, clsr. */
 	Transport: &http.Transport{
 		Dial: func(network string, addr string) (net.Conn, error) {
-			return NewLimitedConn(network, addr, byteLimit * 10)
+			return NewLimitedConn(network, addr, byteLimit*2)
 		},
 	},
 }
@@ -141,6 +145,7 @@ func getAndFindTitle(url string) string {
 	title := findTitle(string(buf[:n]))
 	if title != "" {
 		// Strip urls in the title, remove spaces on the beginning and end, and truncate it
+		// Urls are stripped to avoid botloops.
 		return utils.Truncate(strings.TrimSpace(stripUrls(title)), titleLimit)
 	}
 	return ""
