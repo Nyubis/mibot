@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/Nyubis/mibot/core"
 	"time"
+	"sync"
 )
 
 // Keep a record of events by type, nick and channel, and store the timestamp
@@ -17,8 +18,13 @@ type record struct {
 	timestamp time.Time
 }
 
-// The string is the event type (e.g. "link", "invite")
-var recent map[string][]record
+type mutexmap struct {
+	sync.RWMutex
+	// The string is the event type (e.g. "link", "invite")
+	m map[string][]record
+}
+
+var recent mutexmap
 
 // The time in seconds it remembers groups of events (the string is the type of event)
 var memtime map[string]int
@@ -27,7 +33,7 @@ var memtime map[string]int
 var maxcount map[string]int
 
 func Init(_ *core.Bot) {
-	recent = make(map[string][]record)
+	recent = mutexmap{m: make(map[string][]record)}
 	memtime = make(map[string]int)
 	maxcount = make(map[string]int)
 	// These should probably be read from the config...
@@ -39,9 +45,11 @@ func Init(_ *core.Bot) {
 
 func FloodCheck(event, nick, channel string) bool {
 	now := time.Now()
-	recent[event] = append(recent[event], record{nick, channel, now})
+	recent.Lock()
+	recent.m[event] = append(recent.m[event], record{nick, channel, now})
 	cutofftime := now.Add(time.Duration(-1*memtime[event]) * time.Second)
 	slice := removeBefore(event, cutofftime)
+	recent.Unlock()
 
 	if len(slice) > maxcount[event] {
 		fmt.Printf("%s in %s has used %s %d times in the past %d seconds\n", nick, channel, event, len(slice), maxcount[event])
@@ -52,7 +60,7 @@ func FloodCheck(event, nick, channel string) bool {
 
 // Remove the values before the given timestamp
 func removeBefore(event string, timestamp time.Time) []record {
-	slice, ok := recent[event]
+	slice, ok := recent.m[event]
 	if !ok {
 		// There aren't any to remove
 		return []record{}
@@ -66,6 +74,6 @@ func removeBefore(event string, timestamp time.Time) []record {
 		}
 	}
 
-	recent[event] = slice[i:]
+	recent.m[event] = slice[i:]
 	return slice[i:]
 }
