@@ -123,7 +123,14 @@ func HandleEnable(_ []string, sender string, channel string) {
 
 // Do the http request and continue to findTitle()
 func getAndFindTitle(url string) string {
-	resp, err := client.Get(url)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+	req.Header.Set("User-Agent", "mibot_irc_linkreader/1.0")
+
+	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println(err)
 		return ""
