@@ -142,11 +142,14 @@ func getAndFindTitle(url string) string {
 
 	contentType := resp.Header.Get("Content-Type")
 	if !strings.Contains(contentType, "text/html") {
+		size := "unknown size"
 		if resp.ContentLength >= 0 {
-			return fmt.Sprintf("%s, %s", contentType, utils.ParseSize(resp.ContentLength))
-		} else {
-			return fmt.Sprintf("%s, unknown size", contentType)
+			size = utils.ParseSize(resp.ContentLength)
 		}
+		if contentType == "" {
+			contentType = "no Content-Type"
+		}
+		return fmt.Sprintf("%s, %s", contentType, size)
 	}
 
 	title := findTitle(string(buf[:n]))
