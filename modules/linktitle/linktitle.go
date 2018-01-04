@@ -29,6 +29,7 @@ const (
 )
 
 var httpRe = regexp.MustCompile("https?://[^\\s]*")
+var trailingPunctRe = regexp.MustCompile("[^\\w\\d\\s/=]$")
 var domainRe = regexp.MustCompile("https?://([^\\s/]*)")
 
 var lastURL map[string]string
@@ -70,7 +71,7 @@ func LoadCfg() {
 
 // Incoming event for and irc message
 func Handle(msg ircmessage.Message) {
-	url := httpRe.FindString(msg.Content)
+	url := trailingPunctRe.ReplaceAllString(httpRe.FindString(msg.Content), "")
 	if url == "" {
 		return
 	}
