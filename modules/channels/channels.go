@@ -31,7 +31,7 @@ func Autojoin(msg ircmessage.Message) {
 
 func InviteJoin(msg ircmessage.Message) {
 	if len(msg.Content) > 0 && verify_channel(msg.Content) {
-		if !floodcontrol.FloodCheck("invite", msg.Nick, msg.Channel) {
+		if !floodcontrol.FloodCheck("invite", msg.Channel) {
 			bot.SendJoin(msg.Content)
 		}
 	}

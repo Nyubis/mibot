@@ -7,13 +7,12 @@ import (
 	"sync"
 )
 
-// Keep a record of events by type, nick and channel, and store the timestamp
+// Keep a record of events by type and channel; store the timestamp
 // When a new event comes in, remove all records older than x seconds
-// Count how many of the same type, nick, and channel are left
+// Count how many of the same type and channel are left
 // Return true if this count exceeds a certain value (so the module will know to ignore it)
 
 type record struct {
-	nick      string
 	channel   string
 	timestamp time.Time
 }
@@ -45,19 +44,20 @@ func Init(_ *core.Bot) {
 	maxcount["reply"] = 2
 }
 
-func FloodCheck(event, nick, channel string) bool {
+func FloodCheck(event, channel string) bool {
 	now := time.Now()
 	recent.Lock()
-	recent.m[event] = append(recent.m[event], record{nick, channel, now})
+	recent.m[event] = append(recent.m[event], record{channel, now})
 	cutofftime := now.Add(time.Duration(-1*memtime[event]) * time.Second)
 	slice := removeBefore(event, cutofftime)
 	recent.Unlock()
 
 	if len(slice) > maxcount[event] {
-		fmt.Printf("%s in %s has used %s %d times in the past %d seconds\n", nick, channel, event, len(slice), maxcount[event])
+		fmt.Printf("Users in %s have used %s %d times in the past %d seconds\n", channel, event, len(slice), maxcount[event])
+		return true
 	}
 
-	return len(slice) > maxcount[event]
+	return false
 }
 
 // Remove the values before the given timestamp

@@ -76,7 +76,7 @@ func Handle(msg ircmessage.Message) {
 		return
 	}
 
-	if floodcontrol.FloodCheck("link", msg.Nick, msg.Channel) {
+	if floodcontrol.FloodCheck("link", msg.Channel) {
 		return
 	}
 

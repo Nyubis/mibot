@@ -41,7 +41,7 @@ func Handle(msg ircmessage.Message) {
 		reply, has = globalreplies[msg.Content]
 	}
 	// If match, also check for flood: don't trigger replies too often
-	if has && !floodcontrol.FloodCheck("reply", msg.Nick, msg.Channel) {
+	if has && !floodcontrol.FloodCheck("reply", msg.Channel) {
 		bot.SendMessage(msg.Channel, reply)
 	}
 }
