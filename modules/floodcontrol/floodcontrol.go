@@ -41,6 +41,8 @@ func Init(_ *core.Bot) {
 	maxcount["invite"] = 2
 	memtime["link"] = 12
 	maxcount["link"] = 3
+	memtime["reply"] = 5
+	maxcount["reply"] = 2
 }
 
 func FloodCheck(event, nick, channel string) bool {
