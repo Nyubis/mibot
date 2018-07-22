@@ -14,7 +14,6 @@ var bot *core.Bot
 
 func Init(ircbot *core.Bot) {
 	bot = ircbot
-
 	LoadCfg()
 }
 
@@ -26,6 +25,7 @@ func LoadCfg() {
 func Autojoin(msg ircmessage.Message) {
 	for _, channel := range autojoin {
 		bot.SendJoin(channel)
+		// If the NAMES reply contains only our nick, we will part it again
 	}
 }
 
@@ -59,4 +59,15 @@ func HandlePartCommand(channels []string, sender string, fromchannel string) {
 
 func verify_channel(channel string) bool {
 	return channel[0] == '#' && !utils.Contains(blacklist, channel)
+}
+
+func ReceiveNamesReply(msg ircmessage.Message) {
+	// Leave the channel if we're the only user (and it was autojoined)
+	// We may have received an @ or other operator char, hence the second check
+	if msg.Content == core.Config.Nick || msg.Content[1:] == core.Config.Nick {
+		chanName := msg.Params[len(msg.Params) -1]
+		if utils.Contains(autojoin, chanName) {
+			bot.SendPart(chanName)
+		}
+	}
 }

@@ -18,6 +18,7 @@ func Load(bot *core.Bot) {
 	core.AddModule("352", admin.ReceiveWho)
 	core.AddModule("001", nickserv.Handle)
 	core.AddModule("001", channels.Autojoin)
+	core.AddModule("353", channels.ReceiveNamesReply)
 	core.AddModule("INVITE", channels.InviteJoin)
 
 	core.AddCommand("shorten", linktitle.HandleShorten)
