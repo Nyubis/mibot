@@ -13,5 +13,5 @@ func main() {
 		core.Config.Port)
 	defer ircbot.Disconnect()
 	modules.Load(ircbot)
-	ircbot.Connect()
+	ircbot.Start()
 }

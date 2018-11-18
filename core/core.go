@@ -7,8 +7,13 @@ import (
 	"net"
 	"net/textproto"
 	"strings"
+	"time"
 
 	"github.com/Nyubis/mibot/ircmessage"
+)
+
+const (
+	timeout = time.Second * 360
 )
 
 type Bot struct {
@@ -49,7 +54,7 @@ func (bot *Bot) SendPart(channel string) {
 }
 
 func (bot *Bot) Connect() {
-	conn, err := net.Dial("tcp", fmt.Sprintf("%s:%d", bot.server, bot.port))
+	conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%d", bot.server, bot.port), time.Second * 5)
 	if err != nil {
 		log.Fatal("Could not connect to server: ", err)
 	}
@@ -68,18 +73,29 @@ func (bot *Bot) Connect() {
 
 	for {
 		line, err := tp.ReadLine()
+		conn.SetReadDeadline(time.Now().Add(timeout))
 		if err != nil {
+			if strings.HasSuffix(err.Error(), "i/o timeout") {
+				return
+			}
 			log.Fatal(err)
-			break
 		}
 		bot.cinput <- line
 	}
-
 }
 
 func (bot *Bot) Disconnect() {
 	if bot.conn != nil {
 		bot.conn.Close()
+	}
+}
+
+func (bot *Bot) Start() {
+	for {
+		// returns when connection is lost, e.g. ping timeout
+		bot.Connect()
+		bot.Disconnect()
+		fmt.Println("Reconnecting…")
 	}
 }
 
