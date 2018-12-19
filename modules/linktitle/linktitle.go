@@ -62,7 +62,7 @@ func Init(ircbot *core.Bot) {
 }
 
 func LoadCfg() {
-	for k, v := range core.Config.Channelsettings {
+	for k, v := range core.Config.Chan {
 		if k != "global" && v.Disabled {
 			disabled[k] = true
 		}
@@ -209,9 +209,9 @@ func shorten(url string) (string, error) {
 // Check whether a domain is blacklisted in a particular channel
 func checkblacklist(url string, channel string) bool {
 	domain := domainRe.FindStringSubmatch(url)[1]
-	if utils.Contains(core.Config.Channelsettings["global"].Blacklist, domain) {
+	if utils.Contains(core.Config.Chan["global"].Blacklist, domain) {
 		return true
 	}
-	settings, has := core.Config.Channelsettings[channel]
+	settings, has := core.Config.Chan[channel]
 	return has && utils.Contains(settings.Blacklist, domain)
 }

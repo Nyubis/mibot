@@ -1,15 +1,13 @@
 package core
 
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/DisposaBoy/JsonConfigReader"
+	"github.com/BurntSushi/toml"
 	"log"
-	"os"
 )
 
 const (
-	filename = "config.json"
+	filename = "config.toml"
 )
 
 type ConfStruct struct {
@@ -20,25 +18,23 @@ type ConfStruct struct {
 		Autojoin  []string
 		Blacklist []string
 	}
-	Admins          []string
-	Ignored         []string
-	Channelsettings map[string]Channelsetting
+	Admins  []string
+	Ignored []string
+	Chan    map[string]Channelsetting
 }
 
 type Channelsetting struct {
 	Disabled  bool
-	Replies   map[string]string
+	Replies   [][]string
 	Blacklist []string
 }
 
 var Config ConfStruct
 
 func LoadConfig() {
-	file, err := os.Open(filename)
+	_, err := toml.DecodeFile(filename, &Config)
 	if err != nil {
 		log.Fatal("Failed to read config:\n", err)
 	}
-	reader := JsonConfigReader.New(file)
-	json.NewDecoder(reader).Decode(&Config)
 	fmt.Println(Config)
 }

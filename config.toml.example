@@ -1,0 +1,31 @@
+nick = "mibot"
+server = "irc.rizon.net"
+port = 6667
+# Admins can use restricted commands such as @enable, @disable and @reload
+# Add yourself here
+admins = ["Tadpole"]
+# List of nicks from whom the messages will be ignored
+# It's a good idea to ignore other bots
+ignored = ["Combot", "Nimdok"]
+
+
+[channels]
+autojoin = ["#bhottu"]
+blacklist = ["#services", "#ripyourbot", "#dontjointhischannel"]
+
+# Settings that can be set on a per-channel basis
+[chan]
+[chan.global]
+# Global settings apply to all channels, but can be overridden in the individual settings
+replies = [
+	[".bots", "Reporting in! [Go] See https://github.com/Nyubis/mibot"],
+	[":ping", "pong"]
+]
+
+[chan."#bhottu"]
+# Blacklisted domains
+blacklist = ["example.com"]
+
+[chan."#bots"]
+# Whether links should be read by default on this channel
+disabled = true

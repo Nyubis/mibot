@@ -17,11 +17,17 @@ func Init(ircbot *core.Bot) {
 
 func LoadCfg() {
 	channelreplies = make(map[string]map[string]string)
-	for k, v := range core.Config.Channelsettings {
+	for k, v := range core.Config.Chan {
 		if k == "global" {
-			globalreplies = v.Replies
+			globalreplies = make(map[string]string)
+			for _, pair := range v.Replies {
+				globalreplies[pair[0]] = pair[1]
+			}
 		} else {
-			channelreplies[k] = v.Replies
+			channelreplies[k] = make(map[string]string)
+			for _, pair := range v.Replies {
+				channelreplies[k][pair[0]] = pair[1]
+			}
 		}
 	}
 }
