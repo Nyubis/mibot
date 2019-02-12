@@ -11,7 +11,7 @@ func main() {
 		core.Config.Nick,
 		core.Config.Server,
 		core.Config.Port,
-		core.Config.SSL)
+		core.Config.TLS)
 	defer ircbot.Disconnect()
 	modules.Load(ircbot)
 	ircbot.Start()

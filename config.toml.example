@@ -1,7 +1,7 @@
 nick = "mibot"
 server = "irc.rizon.net"
 port = 6697
-ssl = true
+tls = true
 # Admins can use restricted commands such as @enable, @disable and @reload
 # Add yourself here
 admins = ["Tadpole"]

@@ -22,19 +22,19 @@ type Bot struct {
 	user    string
 	server  string
 	port    int
-	ssl     bool
+	tls     bool
 	conn    net.Conn
 	cinput  chan string
 	coutput chan string
 }
 
-func NewBot(nick string, server string, port int, ssl bool) *Bot {
+func NewBot(nick string, server string, port int, tls bool) *Bot {
 	return &Bot{
 		nick:   nick,
 		user:   nick,
 		server: server,
 		port:   port,
-		ssl:    ssl,
+		tls:    tls,
 	}
 }
 
@@ -62,7 +62,7 @@ func (bot *Bot) Connect() {
 	dialer := &net.Dialer{Timeout: time.Second * 5}
 	address := fmt.Sprintf("%s:%d", bot.server, bot.port)
 
-	if (bot.ssl) {
+	if (bot.tls) {
 		conn, err = tls.DialWithDialer(dialer, "tcp", address, &tls.Config{})
 	} else {
 		conn, err = dialer.Dial("tcp", address)
