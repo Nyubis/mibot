@@ -2,6 +2,7 @@ package core
 
 import (
 	"bufio"
+	"crypto/tls"
 	"fmt"
 	"log"
 	"net"
@@ -21,17 +22,19 @@ type Bot struct {
 	user    string
 	server  string
 	port    int
+	ssl     bool
 	conn    net.Conn
 	cinput  chan string
 	coutput chan string
 }
 
-func NewBot(nick string, server string, port int) *Bot {
+func NewBot(nick string, server string, port int, ssl bool) *Bot {
 	return &Bot{
 		nick:   nick,
 		user:   nick,
 		server: server,
 		port:   port,
+		ssl:    ssl,
 	}
 }
 
@@ -54,7 +57,16 @@ func (bot *Bot) SendPart(channel string) {
 }
 
 func (bot *Bot) Connect() {
-	conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%d", bot.server, bot.port), time.Second * 5)
+	var conn net.Conn
+	var err error
+	dialer := &net.Dialer{Timeout: time.Second * 5}
+	address := fmt.Sprintf("%s:%d", bot.server, bot.port)
+
+	if (bot.ssl) {
+		conn, err = tls.DialWithDialer(dialer, "tcp", address, &tls.Config{})
+	} else {
+		conn, err = dialer.Dial("tcp", address)
+	}
 	if err != nil {
 		log.Fatal("Could not connect to server: ", err)
 	}
