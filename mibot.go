@@ -10,7 +10,8 @@ func main() {
 	ircbot := core.NewBot(
 		core.Config.Nick,
 		core.Config.Server,
-		core.Config.Port)
+		core.Config.Port,
+		core.Config.SSL)
 	defer ircbot.Disconnect()
 	modules.Load(ircbot)
 	ircbot.Start()

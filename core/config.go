@@ -14,6 +14,7 @@ type ConfStruct struct {
 	Nick     string
 	Server   string
 	Port     int
+	SSL      bool
 	Channels struct {
 		Autojoin  []string
 		Blacklist []string
