@@ -4,8 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net"
 	"net/http"
+	"os"
 	"regexp"
 	"strings"
 	"time"
@@ -35,6 +37,8 @@ var domainRe = regexp.MustCompile("https?://([^\\s/]*)")
 var lastURL map[string]string
 var disabled map[string]bool
 
+var logfile *os.File
+
 var bot *core.Bot
 var client = &http.Client{
 	CheckRedirect: func(_ *http.Request, via []*http.Request) error {
@@ -59,6 +63,13 @@ func Init(ircbot *core.Bot) {
 	lastURL = make(map[string]string)
 	disabled = make(map[string]bool)
 	LoadCfg()
+
+	logfile, err := os.OpenFile("mibot.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+
+	if err != nil {
+		log.Println(err)
+	}
+	log.SetOutput(logfile)
 }
 
 func LoadCfg() {
@@ -75,6 +86,8 @@ func Handle(msg ircmessage.Message) {
 	if url == "" {
 		return
 	}
+
+	log.Printf("User %s requested link %s\n", msg.Nick, url)
 
 	if floodcontrol.FloodCheck("link", msg.Channel) {
 		return
