@@ -168,9 +168,10 @@ func getAndFindTitle(url string) string {
 
 	title := findTitle(string(buf[:n]))
 	if title != "" {
-		// Strip urls in the title, remove spaces on the beginning and end, and truncate it
+		// Strip urls in the title, remove spaces on the beginning and end, normalize whitespace and truncate
 		// Urls are stripped to avoid botloops.
-		return utils.Truncate(strings.TrimSpace(stripUrls(title)), titleLimit)
+		// Whitespace is normalized because browsers do that for titles, too
+		return utils.Truncate(utils.NormalizeWhitespace(strings.TrimSpace(stripUrls(title))), titleLimit)
 	}
 	return ""
 }

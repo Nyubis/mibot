@@ -2,7 +2,10 @@ package utils
 
 import (
 	"fmt"
+	"regexp"
 )
+
+var whitespaceRe = regexp.MustCompile("\\s+")
 
 func Contains(hay []string, needle string) bool {
 	for _, s := range hay {
@@ -35,4 +38,8 @@ func Truncate(s string, limit int) string {
 		return s
 	}
 	return s[:limit] + "..."
+}
+
+func NormalizeWhitespace(s string) string {
+	return whitespaceRe.ReplaceAllString(s, " ")
 }
