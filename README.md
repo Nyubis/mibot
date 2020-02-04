@@ -2,6 +2,8 @@
 
 Modular IRC Bot
 
-Mostly a learning exercise, depends on [BurntSushi/toml](https://github.com/BurntSushi/toml).
+This is mostly a learning exercise, the primary functionality is to display the title of webpages linked in the chat.
 
-Rename mibot.cfg.example to mibot.cfg and edit it to use.
+This project has a dependency on [BurntSushi/toml](https://github.com/BurntSushi/toml).
+
+Rename `config.toml.example` to `config.toml` and edit it to use.
