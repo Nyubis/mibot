@@ -43,4 +43,5 @@ func reload() {
 	channels.LoadCfg()
 	replies.LoadCfg()
 	linktitle.LoadCfg()
+	floodcontrol.LoadCfg()
 }

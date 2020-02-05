@@ -30,3 +30,14 @@ blacklist = ["example.com"]
 [chan."#bots"]
 # Whether links should be read by default on this channel
 disabled = true
+
+[floodcontrol]
+[floodcontrol.invite] # max 2 invites per 15 seconds
+time = 15
+max = 2
+[floodcontrol.link] # max 4 links per 16 seconds
+time = 16
+max = 4
+[floodcontrol.reply] # max 5 reply triggers per 20 seconds
+time = 20
+max = 5

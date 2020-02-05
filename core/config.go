@@ -2,8 +2,9 @@ package core
 
 import (
 	"fmt"
-	"github.com/BurntSushi/toml"
 	"log"
+
+	"github.com/BurntSushi/toml"
 )
 
 const (
@@ -19,9 +20,19 @@ type ConfStruct struct {
 		Autojoin  []string
 		Blacklist []string
 	}
-	Admins  []string
-	Ignored []string
-	Chan    map[string]Channelsetting
+	Admins       []string
+	Ignored      []string
+	Chan         map[string]Channelsetting
+	FloodControl struct {
+		Invite FloodSetting
+		Link   FloodSetting
+		Reply  FloodSetting
+	}
+}
+
+type FloodSetting struct {
+	Time int
+	Max  int
 }
 
 type Channelsetting struct {

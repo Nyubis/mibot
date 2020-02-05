@@ -2,9 +2,10 @@ package floodcontrol
 
 import (
 	"fmt"
-	"github.com/Nyubis/mibot/core"
-	"time"
 	"sync"
+	"time"
+
+	"github.com/Nyubis/mibot/core"
 )
 
 // Keep a record of events by type and channel; store the timestamp
@@ -35,13 +36,16 @@ func Init(_ *core.Bot) {
 	recent = mutexmap{m: make(map[string][]record)}
 	memtime = make(map[string]int)
 	maxcount = make(map[string]int)
-	// These should probably be read from the config...
-	memtime["invite"] = 15
-	maxcount["invite"] = 2
-	memtime["link"] = 12
-	maxcount["link"] = 3
-	memtime["reply"] = 5
-	maxcount["reply"] = 2
+	LoadCfg()
+}
+
+func LoadCfg() {
+	memtime["invite"] = core.Config.FloodControl.Invite.Time
+	maxcount["invite"] = core.Config.FloodControl.Invite.Max
+	memtime["link"] = core.Config.FloodControl.Link.Time
+	maxcount["link"] = core.Config.FloodControl.Link.Max
+	memtime["reply"] = core.Config.FloodControl.Reply.Time
+	maxcount["reply"] = core.Config.FloodControl.Reply.Max
 }
 
 func FloodCheck(event, channel string) bool {
