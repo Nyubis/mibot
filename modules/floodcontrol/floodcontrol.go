@@ -18,13 +18,12 @@ type record struct {
 	timestamp time.Time
 }
 
-type mutexmap struct {
+type lockedList struct {
 	sync.RWMutex
-	// The string is the event type (e.g. "link", "invite")
-	m map[string][]record
+	list []record
 }
 
-var recent mutexmap
+var recent map[string]*lockedList
 
 // The time in seconds it remembers groups of events (the string is the type of event)
 var memtime map[string]int
@@ -33,7 +32,10 @@ var memtime map[string]int
 var maxcount map[string]int
 
 func Init(_ *core.Bot) {
-	recent = mutexmap{m: make(map[string][]record)}
+	recent = make(map[string]*lockedList)
+	recent["invite"] = &lockedList{list: make([]record, 0)}
+	recent["link"] = &lockedList{list: make([]record, 0)}
+	recent["reply"] = &lockedList{list: make([]record, 0)}
 	memtime = make(map[string]int)
 	maxcount = make(map[string]int)
 	LoadCfg()
@@ -50,14 +52,15 @@ func LoadCfg() {
 
 func FloodCheck(event, channel string) bool {
 	now := time.Now()
-	recent.Lock()
-	recent.m[event] = append(recent.m[event], record{channel, now})
+	recent[event].Lock()
+	defer recent[event].Unlock()
+	list := recent[event].list
 	cutofftime := now.Add(time.Duration(-1*memtime[event]) * time.Second)
-	slice := removeBefore(event, cutofftime)
-	recent.Unlock()
+	slice := filterBefore(list, cutofftime)
+	recent[event].list = append(slice, record{channel, now})
 
 	if len(slice) > maxcount[event] {
-		fmt.Printf("Users in %s have used %s %d times in the past %d seconds\n", channel, event, len(slice), maxcount[event])
+		fmt.Printf("Users in %s have used %s %d times in the past %d seconds\n", channel, event, len(slice), memtime[event])
 		return true
 	}
 
@@ -65,21 +68,14 @@ func FloodCheck(event, channel string) bool {
 }
 
 // Remove the values before the given timestamp
-func removeBefore(event string, timestamp time.Time) []record {
-	slice, ok := recent.m[event]
-	if !ok {
-		// There aren't any to remove
-		return []record{}
-	}
-
+func filterBefore(list []record, timestamp time.Time) []record {
 	var i int
 	var entry record
-	for i, entry = range slice {
+	for i, entry = range list {
 		if timestamp.Before(entry.timestamp) {
 			break
 		}
 	}
 
-	recent.m[event] = slice[i:]
-	return slice[i:]
+	return list[i:]
 }
